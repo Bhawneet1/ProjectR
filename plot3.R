@@ -1,0 +1,24 @@
+
+# Load necessary libraries
+library(data.table)
+
+# Read the data (adjust the file path as necessary)
+data <- fread("Y:/exdata_data_household_power_consumption/household_power_consumption.txt", na.strings = "?")
+
+
+# Filter the data
+data$Date <- as.Date(data$Date, format="%d/%m/%Y")
+filtered_data <- data[data$Date >= "2007-02-01" & data$Date <= "2007-02-02"]
+
+# Create the DateTime column
+filtered_data$DateTime <- as.POSIXct(paste(filtered_data$Date, filtered_data$Time))
+
+# Create the plot
+png("plot3.png", width = 480, height = 480)
+plot(filtered_data$DateTime, filtered_data$Sub_metering_1, type = "l", col = "black", 
+     ylab = "Energy sub metering", xlab = "")
+lines(filtered_data$DateTime, filtered_data$Sub_metering_2, col = "red")
+lines(filtered_data$DateTime, filtered_data$Sub_metering_3, col = "blue")
+legend("topright", legend = c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"), 
+       col = c("black", "red", "blue"), lty = 1)
+dev.off()
